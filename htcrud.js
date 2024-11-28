@@ -3,11 +3,13 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 const baseDir = './'; // Base directory for file operations
 
 app.use(bodyParser.json());
+app.use(cors());
 
 // Create a file
 app.post('/:filename', (req, res) => {
