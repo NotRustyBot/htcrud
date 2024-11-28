@@ -1,0 +1,15 @@
+{
+  "name": "htcrud",
+  "version": "1.0.0",
+  "description": "Access file system via http requests",
+  "main": "htcrud.js",
+  "bin": {
+    "dev-fileserver": "./htcrud.js"
+  },
+  "author": "NotRustyBot",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.1"
+  }
+}
