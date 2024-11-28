@@ -1,4 +1,4 @@
-# Simple File CRUD Server
+# htcrud
 
 ## Overview
 
@@ -12,13 +12,24 @@ This is a lightweight Express.js-based file management server that provides basi
 - Delete files
 - CORS support for cross-origin requests
 
+## Prerequisites
+
+- Node.js (v12 or later recommended)
+- npm (Node Package Manager)
+
 ## Installation
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install express body-parser cors
-   ```
+Install directly from GitHub:
+```bash
+npm install NotRustyBot/htcrud
+```
+
+Or clone the repository:
+```bash
+git clone https://github.com/NotRustyBot/htcrud.git
+cd htcrud
+npm install
+```
 
 ## Dependencies
 
@@ -88,3 +99,5 @@ The server will start on port 3000 by default. You can change the port by settin
 - 200 Status: File successfully read/updated/deleted
 - 404 Status: File not found
 - 500 Status: Server error during file operation
+
+MIT License
