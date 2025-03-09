@@ -8,7 +8,7 @@ const cors = require('cors');
 const app = express();
 const baseDir = './'; // Base directory for file operations
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors());
 
 // Create a file
