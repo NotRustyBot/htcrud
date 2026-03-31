@@ -4,7 +4,7 @@
   "description": "HTTP CRUD server for file-based storage",
   "main": "src/index.js",
   "bin": {
-    "htcrud": "src/index.js"
+    "htcrud": "cli.js"
   },
   "type": "module",
   "scripts": {
