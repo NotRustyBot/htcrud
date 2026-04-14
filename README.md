@@ -41,13 +41,21 @@ start({ port: 3000, dir: './data' });
 | GET | `/<path>` | Read file |
 | PUT | `/<path>` | Create/update file |
 | POST | `/<path>` | Create file |
+| PATCH | `/<path>` | Append to file (creates file if doesn't exist) |
 | DELETE | `/<path>` | Delete file |
 
 ## Status Codes
 
-- 200 - OK (GET success)
+- 200 - OK (GET/PATCH success)
 - 201 - Created (PUT/POST success)
 - 204 - No Content (DELETE success)
 - 400 - Bad Request
 - 404 - Not Found
 - 500 - Internal Server Error
+
+## Features
+
+- **CORS Support**: All endpoints include CORS headers for cross-origin requests
+- **File Type Detection**: Automatic Content-Type header based on file extension
+- **Directory Creation**: Automatic creation of parent directories as needed
+- **Security**: Path traversal protection

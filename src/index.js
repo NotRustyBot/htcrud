@@ -60,7 +60,7 @@ async function handleRequest(req, res, baseDir) {
   if (method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Max-Age': '86400'
     });
@@ -95,6 +95,26 @@ async function handleRequest(req, res, baseDir) {
       await writeFile(filePath, Buffer.concat(chunks));
       sendJson(res, 201, { success: true, path: urlPath });
     }
+    else if (method === 'PATCH') {
+      await ensureDir(dirname(filePath));
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      const data = Buffer.concat(chunks);
+      
+      try {
+        // Append to existing file
+        const existing = await readFile(filePath);
+        await writeFile(filePath, Buffer.concat([existing, data]));
+      } catch (err) {
+        if (err.code === 'ENOENT') {
+          // Create file if it doesn't exist
+          await writeFile(filePath, data);
+        } else {
+          throw err;
+        }
+      }
+      sendJson(res, 200, { success: true, path: urlPath, operation: 'appended' });
+    }
     else if (method === 'DELETE') {
       await unlink(filePath);
       res.writeHead(204, {
@@ -110,6 +130,8 @@ async function handleRequest(req, res, baseDir) {
       sendError(res, 404, 'File not found');
     } else if (err.code === 'ENOENT' && (method === 'PUT' || method === 'POST')) {
       sendError(res, 500, 'Failed to create file');
+    } else if (err.code === 'ENOENT' && method === 'PATCH') {
+      sendError(res, 500, 'Failed to append to file');
     } else if (err.code === 'ENOENT' && method === 'DELETE') {
       sendError(res, 404, 'File not found');
     } else if (err.code === 'EISDIR') {
