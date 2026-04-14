@@ -17,7 +17,10 @@ function parseArgs() {
 }
 
 function sendJson(res, status, data) {
-  res.writeHead(status, { 'Content-Type': 'application/json' });
+  res.writeHead(status, {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+  });
   res.end(JSON.stringify(data));
 }
 
@@ -53,6 +56,18 @@ async function handleRequest(req, res, baseDir) {
   const { url: urlPath, method } = req;
   const filePath = getFilePath(baseDir, urlPath);
 
+  // Handle CORS preflight requests
+  if (method === 'OPTIONS') {
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400'
+    });
+    res.end();
+    return;
+  }
+
   if (!urlPath || urlPath === '/') {
     return sendError(res, 400, 'Missing path');
   }
@@ -67,7 +82,10 @@ async function handleRequest(req, res, baseDir) {
     if (method === 'GET') {
       const data = await readFile(filePath);
       const contentType = getContentType(urlPath);
-      res.writeHead(200, { 'Content-Type': contentType });
+      res.writeHead(200, {
+        'Content-Type': contentType,
+        'Access-Control-Allow-Origin': '*'
+      });
       res.end(data);
     }
     else if (method === 'PUT' || method === 'POST') {
@@ -79,7 +97,9 @@ async function handleRequest(req, res, baseDir) {
     }
     else if (method === 'DELETE') {
       await unlink(filePath);
-      res.writeHead(204);
+      res.writeHead(204, {
+        'Access-Control-Allow-Origin': '*'
+      });
       res.end();
     }
     else {
